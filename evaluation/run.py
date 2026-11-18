@@ -6,7 +6,7 @@ import time
 from pathlib import Path
 
 from orca.api import DATASETS
-from orca.workflow import PROPOSAL_SCHEMA, _llm
+from orca.workflow import PROPOSAL_SCHEMA, _llm, _model_name, _provider
 from orca.workflow import investigate
 
 ROOT = Path(__file__).resolve().parent
@@ -20,8 +20,8 @@ def evaluate(use_llm=False, single_agent=False):
         report = investigate(DATASETS[case["dataset"]], case["site"], case["start"], case["end"], question,
                              use_llm and not single_agent)
         if single_agent:
-            if not os.getenv("OPENAI_API_KEY"):
-                raise RuntimeError("OPENAI_API_KEY is required for single-agent evaluation")
+            if not os.getenv("GEMINI_API_KEY" if _provider() == "gemini" else "OPENAI_API_KEY"):
+                raise RuntimeError("The selected provider's API key is required for single-agent evaluation")
             started = time.perf_counter()
             draft = _llm("single_agent_baseline", {"question": question, "site": case["site"],
                 "period": [case["start"], case["end"]], "evidence": report["evidence"]}, PROPOSAL_SCHEMA)
@@ -30,7 +30,7 @@ def evaluate(use_llm=False, single_agent=False):
             report["revised"] = False
             report["metrics"] = {"calls": 1, **usage,
                 "latency_ms": round((time.perf_counter() - started) * 1000, 1),
-                "model": os.getenv("ORCA_MODEL", "gpt-4o-mini")}
+                "model": _model_name(), "provider": _provider()}
         ids = {row["id"] for row in report["evidence"]}
         supported = all(set(report["claim_evidence"].get(claim, [])) <= ids and
                         bool(report["claim_evidence"].get(claim)) for claim in report["claims"])
