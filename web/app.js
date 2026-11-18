@@ -34,7 +34,8 @@ function showReport(result) {
   $("mode").textContent = result.mode === "llm" ? "LLM agents" : "Rule-based demo";
   $("summary").textContent = result.summary;
   $("site-title").textContent = result.site;
-  fillList($("claims"), result.claims, "No supported claims for this period.");
+  $("metrics").textContent = `${result.metrics?.latency_ms ?? 0} ms · ${result.metrics?.calls ?? 0} LLM calls · ${result.metrics?.input_tokens ?? 0} input tokens · ${result.metrics?.output_tokens ?? 0} output tokens`;
+  fillList($("claims"), result.claims.map((claim) => `${claim} [${(result.claim_evidence?.[claim] || []).join(", ")}]`), "No supported claims for this period.");
   fillList($("limitations"), result.limitations, "No additional data limitations recorded.");
   $("review-tag").textContent = result.revised ? "Proposal challenged and revised" : "Proposal approved";
   $("trace").replaceChildren(...result.trace.map((item) => {
@@ -76,6 +77,18 @@ $("run").addEventListener("click", async () => {
     $("status").textContent = `Complete · ${result.trace.length} agent steps`;
   } catch (error) { $("status").textContent = error.message; }
   finally { $("run").disabled = false; }
+});
+$("offline").addEventListener("click", async () => {
+  try { setDataset(await parseResponse(await fetch("/api/datasets/noaa-offline"))); $("status").textContent = "Offline NOAA excerpt loaded."; }
+  catch (error) { $("status").textContent = error.message; }
+});
+$("live").addEventListener("click", async () => {
+  $("status").textContent = "Downloading NOAA station export.";
+  try {
+    setDataset(await parseResponse(await fetch("/api/noaa/import", {method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({station: "florida_keys", start: $("start").value, end: $("end").value})})));
+    $("status").textContent = "NOAA export loaded.";
+  } catch (error) { $("status").textContent = error.message; }
 });
 fetch("/api/datasets/sample").then(parseResponse).then(setDataset)
   .catch((error) => { $("dataset-note").textContent = "Could not load sample data."; $("status").textContent = error.message; });
