@@ -76,6 +76,8 @@ Useful source starting points: [NOAA Coral Reef Watch products](https://www.cora
 
 ## NOAA data and evaluation (phase 2–5)
 
+The two LLM result files include each case's answer for human review. Both modes use the same selected evidence rows and end-to-end latency window. Automated claim support requires an exact match to a canonical evidence-linked finding; paraphrases fail that narrow check even when scientifically valid. Review summaries and claims manually before reporting a winner. Do not commit API keys or raw private input data.
+
 Use **Load NOAA Florida Keys example** for a bundled, offline 12-day excerpt from the [official station archive](https://coralreefwatch.noaa.gov/product/vs/data/florida_keys.txt), 10–21 August 2023. **Refresh from NOAA** downloads a selected period (at most 366 days) from that fixed source. The parser maps `SST@90th_HS` to sea surface temperature, `SSTA@90th_HS` to anomaly, `DHW_from_90th_HS>1` to DHW, and preserves the separate seven-day maximum alert code. Regional virtual station values are satellite heat-stress indicators; they are not direct bleaching observations. Uploaded and imported datasets are kept in server memory until restart.
 
 The API also provides `GET /api/datasets/noaa-offline`, `GET /api/noaa/stations`, and `POST /api/noaa/import` with JSON `station`, `start`, `end`. Claims in the report link to source row IDs. LLM mode uses a reasoner, independent critic, at most one revision, and a verified fallback. It logs latency and actual token counts; dollar cost depends on current model pricing.
