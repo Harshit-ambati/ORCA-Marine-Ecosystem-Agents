@@ -63,3 +63,21 @@ WORKPLAN.md        Research plan, milestones, and evaluation
 The demo DHW categories are a teaching heuristic (`<4` low, `4–<8` moderate, `≥8` high) and do not reproduce a full operational alert system. A DHW signal indicates thermal stress, while a direct observation is needed to say bleaching was observed. The model may suggest explanations but its output is reviewed against the provided evidence. Verify real data provenance, spatial resolution, dates, and thresholds before presenting scientific conclusions.
 
 Useful source starting points: [NOAA Coral Reef Watch products](https://www.coralreefwatch.noaa.gov/product/index.php), [NOAA 5 km methodology](https://www.coralreefwatch.noaa.gov/product/5km/methodology.php), [OBIS data access](https://manual.obis.org/access).
+
+## NOAA data and evaluation (phase 2–5)
+
+Use **Load NOAA Florida Keys example** for a bundled, offline 12-day excerpt from the [official station archive](https://coralreefwatch.noaa.gov/product/vs/data/florida_keys.txt), 10–21 August 2023. **Refresh from NOAA** downloads a selected period (at most 366 days) from that fixed source. The parser maps `SST@90th_HS` to sea surface temperature, `SSTA@90th_HS` to anomaly, `DHW_from_90th_HS>1` to DHW, and preserves the separate seven-day maximum alert code. Regional virtual station values are satellite heat-stress indicators; they are not direct bleaching observations. Uploaded and imported datasets are kept in server memory until restart.
+
+The API also provides `GET /api/datasets/noaa-offline`, `GET /api/noaa/stations`, and `POST /api/noaa/import` with JSON `station`, `start`, `end`. Claims in the report link to source row IDs. LLM mode uses a reasoner, independent critic, at most one revision, and a verified fallback. It logs latency and actual token counts; dollar cost depends on current model pricing.
+
+Run the reproducible evaluation from the repository root:
+
+```powershell
+python -m unittest discover -s tests -v
+python -m evaluation.run --output evaluation/baseline_results.json
+# Optional with OPENAI_API_KEY and the openai package installed:
+python -m evaluation.run --llm --output evaluation/collaborative_results.json
+python -m evaluation.run --single-agent --output evaluation/single_agent_results.json
+```
+
+The 20-case deterministic result checks implementation behavior against annotated teaching labels; it does not estimate ecological predictive accuracy. The LLM comparison has not been run without an API key. See [SUBMISSION.md](SUBMISSION.md) for methods, limitations, and demo script. The risk labels `<4`, `4–<8`, and `≥8` DHW are educational categories, distinct from NOAA's operational alert codes.
