@@ -13,16 +13,26 @@ python -m uvicorn orca.api:app --reload
 
 Open **http://127.0.0.1:8000**. Choose an example site, dates, and a question. The sample dataset is synthetic. Without an LLM key, the application executes a deterministic, evidence-first **demo workflow**; it is not represented as an LLM run.
 
-For LLM reasoning and independent critique, optionally install the OpenAI Python package and set a server-side key:
+For Gemini reasoning and independent critique, set a server-side key in the PowerShell session that starts the app:
+
+```powershell
+$env:ORCA_PROVIDER = "gemini"
+$env:GEMINI_API_KEY = Read-Host "Gemini API key"
+$env:ORCA_MODEL = "gemini-3.8-flash"
+python -m uvicorn orca.api:app --reload
+```
+
+The key stays in the server process and is excluded from Git. For the previous OpenAI option, optionally install the OpenAI Python package and set its server-side key:
 
 ```powershell
 python -m pip install "openai>=2,<3"
 $env:OPENAI_API_KEY = "your-key"
+$env:ORCA_PROVIDER = "openai"
 $env:ORCA_MODEL = "gpt-4o-mini"
 python -m uvicorn orca.api:app --reload
 ```
 
-Then select **Use LLM reasoning and critique**. Model calls incur API charges. The key stays on the server. The implementation uses the Responses API with structured JSON output and a bounded critic step. The critic cannot silently turn missing observations into confirmed bleaching.
+Then select **Use LLM reasoning and critique**. Model calls may incur API charges. Gemini uses the Google Gen AI SDK's structured JSON output; OpenAI uses the Responses API. A bounded critic reviews generated claims.
 
 ## Import data
 
@@ -75,7 +85,7 @@ Run the reproducible evaluation from the repository root:
 ```powershell
 python -m unittest discover -s tests -v
 python -m evaluation.run --output evaluation/baseline_results.json
-# Optional with OPENAI_API_KEY and the openai package installed:
+# Optional with GEMINI_API_KEY and google-genai installed:
 python -m evaluation.run --llm --output evaluation/collaborative_results.json
 python -m evaluation.run --single-agent --output evaluation/single_agent_results.json
 ```
