@@ -35,6 +35,8 @@ With a valid server-side `GEMINI_API_KEY` and `ORCA_PROVIDER=gemini` (or `OPENAI
 
 ## Demo script (three minutes)
 
+The evaluation files now retain each answer for review. Automated claim support uses exact canonical evidence-linked findings. Paraphrases fail that narrow check, and a report with no claims passes it vacuously. Both LLM modes use the same evidence rows and end-to-end timing. Compare the written summaries manually for factual support, uncertainty, and unsupported causal claims before presenting a conclusion.
+
 1. Start the server from the README and show the synthetic example. Explain the specialist and critic roles and inspect the evidence IDs.
 2. Load the offline NOAA Florida Keys example. Select 10–21 August 2023. Show the peak DHW, NOAA alert code, source URL, and the missing direct bleaching observations.
 3. Explain that “high” is ORCA's teaching category, distinct from NOAA's alert code. Show the agent trace and metrics.
