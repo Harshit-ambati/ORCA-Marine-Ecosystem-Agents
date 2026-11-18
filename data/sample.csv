@@ -1,0 +1,12 @@
+site,date,sea_surface_temp_c,temp_anomaly_c,dhw_c_weeks,bleaching_observed,source
+Example Reef A,2026-06-01,28.2,0.3,0.5,,Synthetic demonstration
+Example Reef A,2026-06-15,29.1,1.2,3.0,,Synthetic demonstration
+Example Reef A,2026-07-01,30.0,1.8,5.2,,Synthetic demonstration
+Example Reef A,2026-07-15,30.4,2.1,8.4,,Synthetic demonstration
+Example Reef B,2026-06-01,26.8,0.0,0.0,false,Synthetic demonstration
+Example Reef B,2026-06-15,27.0,0.2,0.0,false,Synthetic demonstration
+Example Reef B,2026-07-01,27.2,0.3,0.2,false,Synthetic demonstration
+Example Reef B,2026-07-15,27.1,0.1,0.3,false,Synthetic demonstration
+Example Reef C,2026-06-01,29.0,0.7,2.1,,Synthetic demonstration
+Example Reef C,2026-06-15,29.5,1.0,4.7,true,Synthetic demonstration
+Example Reef C,2026-07-01,29.7,1.2,6.0,true,Synthetic demonstration
