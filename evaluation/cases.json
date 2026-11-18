@@ -1,0 +1,22 @@
+[
+  {"id":"a1","dataset":"sample","site":"Example Reef A","start":"2026-06-01","end":"2026-06-01","expected_risk":"low","observation":"missing"},
+  {"id":"a2","dataset":"sample","site":"Example Reef A","start":"2026-06-01","end":"2026-06-15","expected_risk":"low","observation":"missing"},
+  {"id":"a3","dataset":"sample","site":"Example Reef A","start":"2026-07-01","end":"2026-07-01","expected_risk":"moderate","observation":"missing"},
+  {"id":"a4","dataset":"sample","site":"Example Reef A","start":"2026-06-01","end":"2026-07-15","expected_risk":"high","observation":"missing"},
+  {"id":"a5","dataset":"sample","site":"Example Reef A","start":"2026-07-15","end":"2026-07-15","expected_risk":"high","observation":"missing"},
+  {"id":"a6","dataset":"sample","site":"Example Reef A","start":"2025-01-01","end":"2025-01-31","expected_risk":"unknown","observation":"missing"},
+  {"id":"b1","dataset":"sample","site":"Example Reef B","start":"2026-06-01","end":"2026-06-01","expected_risk":"low","observation":"negative"},
+  {"id":"b2","dataset":"sample","site":"Example Reef B","start":"2026-06-01","end":"2026-07-15","expected_risk":"low","observation":"negative"},
+  {"id":"b3","dataset":"sample","site":"Example Reef B","start":"2026-07-15","end":"2026-07-15","expected_risk":"low","observation":"negative"},
+  {"id":"b4","dataset":"sample","site":"Example Reef B","start":"2025-01-01","end":"2025-01-31","expected_risk":"unknown","observation":"missing"},
+  {"id":"c1","dataset":"sample","site":"Example Reef C","start":"2026-06-01","end":"2026-06-01","expected_risk":"low","observation":"missing"},
+  {"id":"c2","dataset":"sample","site":"Example Reef C","start":"2026-06-15","end":"2026-06-15","expected_risk":"moderate","observation":"positive"},
+  {"id":"c3","dataset":"sample","site":"Example Reef C","start":"2026-07-01","end":"2026-07-01","expected_risk":"moderate","observation":"positive"},
+  {"id":"c4","dataset":"sample","site":"Example Reef C","start":"2026-06-01","end":"2026-07-01","expected_risk":"moderate","observation":"positive"},
+  {"id":"c5","dataset":"sample","site":"Example Reef C","start":"2025-01-01","end":"2025-01-31","expected_risk":"unknown","observation":"missing"},
+  {"id":"n1","dataset":"noaa-offline","site":"Florida Keys","start":"2023-08-10","end":"2023-08-10","expected_risk":"high","observation":"missing"},
+  {"id":"n2","dataset":"noaa-offline","site":"Florida Keys","start":"2023-08-15","end":"2023-08-15","expected_risk":"high","observation":"missing"},
+  {"id":"n3","dataset":"noaa-offline","site":"Florida Keys","start":"2023-08-20","end":"2023-08-21","expected_risk":"high","observation":"missing"},
+  {"id":"n4","dataset":"noaa-offline","site":"Florida Keys","start":"2023-08-10","end":"2023-08-21","expected_risk":"high","observation":"missing"},
+  {"id":"n5","dataset":"noaa-offline","site":"Florida Keys","start":"2024-01-01","end":"2024-01-31","expected_risk":"unknown","observation":"missing"}
+]

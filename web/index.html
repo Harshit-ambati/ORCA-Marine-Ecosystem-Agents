@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071e2a">
+  <title>ORCA · Marine ecosystem investigator</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <script defer src="/static/app.js"></script>
+</head>
+<body>
+  <header class="topbar"><div class="brand"><span class="brand-mark">◉</span> ORCA <span class="brand-divider">/</span> <span class="brand-sub">Marine intelligence</span></div><span class="badge">Research prototype · v0.1</span></header>
+  <main>
+    <section class="hero"><p class="eyebrow">COLLABORATIVE AGENT INVESTIGATIONS</p><h1>Understand what the ocean <em>is telling us.</em></h1><p>Investigate reef heat stress with specialist agents that gather evidence, challenge conclusions, and explain what the data can support.</p></section>
+    <div class="layout">
+      <section class="panel controls" aria-labelledby="setup-title">
+        <div class="panel-heading"><span class="step">01</span><div><p class="eyebrow">SET UP A CASE</p><h2 id="setup-title">Investigation</h2></div></div>
+        <div class="notice" id="dataset-note">Loading dataset…</div>
+        <label for="file">Dataset <span class="hint">Optional CSV upload</span></label>
+        <input id="file" type="file" accept=".csv,text/csv">
+        <p class="field-help">The provided sample is synthetic. Your uploaded CSV stays in server memory until restart.</p>
+        <label for="site">Reef site</label><select id="site"></select>
+        <div class="dates"><div><label for="start">From</label><input id="start" type="date"></div><div><label for="end">To</label><input id="end" type="date"></div></div>
+        <label for="question">Research question</label><textarea id="question" rows="3">What do the available records tell us about bleaching risk during this period?</textarea>
+        <label class="check"><input id="llm" type="checkbox"> <span>Use LLM reasoning and critique <small>Requires a server-side Gemini or OpenAI API key</small></span></label>
+        <button id="run" class="primary">Run investigation <span aria-hidden="true">↗</span></button>
+        <p id="status" class="status" role="status" aria-live="polite"></p>
+      </section>
+      <section class="results" aria-labelledby="results-title">
+        <div class="panel-heading"><span class="step">02</span><div><p class="eyebrow">AGENT OUTPUT</p><h2 id="results-title">Findings</h2></div></div>
+        <div id="empty" class="empty"><div class="empty-icon">◎</div><h3>Your investigation starts here</h3><p>Choose a reef and run the agents to see the evidence, their discussion, and a reviewed report.</p></div>
+        <div id="report" hidden>
+          <div class="report-card"><div class="report-top"><span id="risk" class="risk"></span><span id="mode" class="mode"></span></div><h3 id="summary"></h3><p id="site-title" class="muted"></p><h4>Supported findings</h4><ul id="claims"></ul><h4>Limitations</h4><ul id="limitations"></ul></div>
+          <p id="metrics" class="muted"></p><div class="section-heading"><h3>Agent collaboration</h3><span id="review-tag"></span></div><ol id="trace" class="trace"></ol>
+          <div class="section-heading"><h3>Source records</h3><span>Values supplied to the agents</span></div><div class="table-wrap"><table><thead><tr><th>Date</th><th>SST °C</th><th>Anomaly °C</th><th>DHW</th><th>Observed</th><th>Source / ID</th></tr></thead><tbody id="evidence"></tbody></table></div>
+        </div>
+      </section>
+    </div>
+    <footer>ORCA is an educational research prototype. Heat stress indicates risk; confirmed bleaching requires direct observations.</footer>
+  </main>
+</body>
+</html>
