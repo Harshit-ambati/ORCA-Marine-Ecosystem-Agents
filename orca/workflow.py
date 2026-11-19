@@ -82,7 +82,9 @@ def _llm(role: str, prompt: dict[str, Any], schema: dict[str, Any]) -> dict[str,
         instructions += " Review the proposal against the context and report concrete issues."
     if _provider() == "gemini":
         from google import genai  # Optional server-only dependency.
-        with genai.Client(api_key=os.environ["GEMINI_API_KEY"]) as client:
+        with genai.Client(api_key=os.environ["GEMINI_API_KEY"],
+                          http_options={"timeout": 30000,
+                                        "retry_options": {"attempts": 2}}) as client:
             response = client.models.generate_content(
                 model=_model_name(), contents=json.dumps(prompt),
                 config={"system_instruction": instructions,

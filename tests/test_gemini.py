@@ -13,8 +13,9 @@ class GeminiAdapterTests(unittest.TestCase):
         captured = {}
 
         class FakeClient:
-            def __init__(self, api_key):
+            def __init__(self, api_key, http_options):
                 captured["key_set"] = bool(api_key)
+                captured["http_options"] = http_options
                 self.models = types.SimpleNamespace(generate_content=self.generate)
 
             def __enter__(self):
@@ -37,6 +38,8 @@ class GeminiAdapterTests(unittest.TestCase):
             self.assertEqual(_model_name(), "gemini-3.8-flash")
             self.assertEqual(_provider(), "gemini")
         self.assertTrue(captured["key_set"])
+        self.assertEqual(captured["http_options"]["timeout"], 30000)
+        self.assertEqual(captured["http_options"]["retry_options"]["attempts"], 2)
         self.assertEqual(captured["config"]["response_mime_type"], "application/json")
         self.assertEqual(captured["config"]["response_json_schema"], PROPOSAL_SCHEMA)
         self.assertEqual(result["_usage"], {"input_tokens": 42, "output_tokens": 12})
