@@ -6,10 +6,15 @@ import io
 import json
 import math
 import os
+import ssl
 import time
 from datetime import date
 from pathlib import Path
 from typing import Any
+
+from .config import load_local_env
+
+load_local_env()
 
 REQUIRED = {"site", "date", "sea_surface_temp_c", "temp_anomaly_c", "dhw_c_weeks", "bleaching_observed", "source"}
 MAX_ROWS = 10000
@@ -82,9 +87,12 @@ def _llm(role: str, prompt: dict[str, Any], schema: dict[str, Any]) -> dict[str,
         instructions += " Review the proposal against the context and report concrete issues."
     if _provider() == "gemini":
         from google import genai  # Optional server-only dependency.
+        http_options = {"timeout": 30000, "retry_options": {"attempts": 2}}
+        if os.name == "nt" and not os.getenv("SSL_CERT_FILE"):
+            # The SDK otherwise uses certifi, which can miss a CA trusted by Windows.
+            http_options["client_args"] = {"verify": ssl.create_default_context()}
         with genai.Client(api_key=os.environ["GEMINI_API_KEY"],
-                          http_options={"timeout": 30000,
-                                        "retry_options": {"attempts": 2}}) as client:
+                          http_options=http_options) as client:
             response = client.models.generate_content(
                 model=_model_name(), contents=json.dumps(prompt),
                 config={"system_instruction": instructions,
@@ -209,6 +217,10 @@ def investigate(rows: list[dict[str, Any]], site: str, start: str, end: str,
         try:
             proposal = turn("reasoner", context, PROPOSAL_SCHEMA)
         except Exception as exc:
+            if "API_KEY_INVALID" in str(exc) or "API key not valid" in str(exc):
+                raise DataError("Gemini rejected the API key. Use the rule-based demo or set a valid GEMINI_API_KEY on the server.") from exc
+            if "CERTIFICATE_VERIFY_FAILED" in str(exc):
+                raise DataError("The Gemini connection certificate could not be verified. Check the trusted CA certificates on this computer.") from exc
             raise DataError(f"LLM reasoning failed: {type(exc).__name__}. Check model access and connectivity.") from exc
     emit("Reasoning Agent", "propose", proposal["summary"], [r["id"] for r in chosen])
 

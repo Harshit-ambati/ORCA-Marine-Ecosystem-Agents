@@ -13,7 +13,9 @@ python -m uvicorn orca.api:app --reload
 
 Open **http://127.0.0.1:8000**. Choose an example site, dates, and a question. The sample dataset is synthetic. Without an LLM key, the application executes a deterministic, evidence-first **demo workflow**; it is not represented as an LLM run.
 
-For Gemini reasoning and independent critique, set a server-side key in the PowerShell session that starts the app:
+For Gemini reasoning and independent critique, paste your key into the project-root `.env` file after `GEMINI_API_KEY=`. Save the file, then restart the server and select **LLM reasoning & critique**. The evaluation command reads the same file. A populated key in `.env` takes priority over a previously set key in PowerShell. `.env` is excluded from Git; `.env.example` shows the format. Keep the key in this file or your server environment, never in the browser UI.
+
+Alternatively, set a server-side key in the PowerShell session that starts the app:
 
 ```powershell
 $env:ORCA_PROVIDER = "gemini"

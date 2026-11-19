@@ -40,7 +40,7 @@ class WorkflowTests(unittest.TestCase):
                  "risk": "high", "claims": ["Bleaching was observed."],
                  "limitations": ["No direct bleaching observations are available for this selection.",
                                  "The selected dataset is synthetic demonstration data, not a real reef assessment."]}
-        with patch.dict("os.environ", {"OPENAI_API_KEY": "test-key"}), \
+        with patch.dict("os.environ", {"ORCA_PROVIDER": "gemini", "GEMINI_API_KEY": "test-key"}), \
              patch("orca.workflow._llm", side_effect=[draft, {"approved": True, "feedback": "Looks good"}]):
             result = investigate(SAMPLE, "Example Reef A", "2026-06-01", "2026-07-15", "Is bleaching confirmed?", True)
         self.assertTrue(result["revised"])

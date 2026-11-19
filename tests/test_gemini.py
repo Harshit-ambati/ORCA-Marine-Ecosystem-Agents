@@ -1,5 +1,6 @@
 import json
 import os
+import ssl
 import sys
 import types
 import unittest
@@ -40,6 +41,9 @@ class GeminiAdapterTests(unittest.TestCase):
         self.assertTrue(captured["key_set"])
         self.assertEqual(captured["http_options"]["timeout"], 30000)
         self.assertEqual(captured["http_options"]["retry_options"]["attempts"], 2)
+        if os.name == "nt" and not os.getenv("SSL_CERT_FILE"):
+            self.assertIsInstance(captured["http_options"]["client_args"]["verify"], ssl.SSLContext)
+            self.assertTrue(captured["http_options"]["client_args"]["verify"].verify_mode == ssl.CERT_REQUIRED)
         self.assertEqual(captured["config"]["response_mime_type"], "application/json")
         self.assertEqual(captured["config"]["response_json_schema"], PROPOSAL_SCHEMA)
         self.assertEqual(result["_usage"], {"input_tokens": 42, "output_tokens": 12})
