@@ -10,15 +10,20 @@ function node(tag, value, className = "") {
 function fillList(target, values, empty) {
   target.replaceChildren(...(values.length ? values : [empty]).map((v) => node("li", v)));
 }
-function setDataset(info) {
+function setDataset(info, source = "sample") {
   datasetId = info.id;
   $("site").replaceChildren(...info.sites.map((name) => {
     const option = node("option", name); option.value = name; return option;
   }));
   $("start").value = info.start;
   $("end").value = info.end;
-  $("dataset-note").textContent = `${info.synthetic ? "Synthetic demo" : "Uploaded dataset"} · ${info.rows} records · ${info.sites.length} site(s)`;
+  const labels = {sample: "Synthetic sample", offline: "Offline NOAA excerpt", live: "NOAA station export", upload: "Uploaded CSV"};
+  for (const id of ["sample", "offline", "live"]) {
+    $(id).classList.toggle("active", source === id);
+    $(id).setAttribute("aria-pressed", String(source === id));
+  }
   $("report").hidden = true;
+  $("dataset-note").textContent = `${labels[source]} · ${info.rows} records · ${info.sites.length} site(s)`;
   $("empty").hidden = false;
 }
 async function parseResponse(response) {
@@ -59,7 +64,7 @@ $("file").addEventListener("change", async (event) => {
   $("status").textContent = "Validating CSV…";
   const form = new FormData(); form.append("file", file);
   try {
-    setDataset(await parseResponse(await fetch("/api/datasets", { method: "POST", body: form })));
+    setDataset(await parseResponse(await fetch("/api/datasets", { method: "POST", body: form })), "upload");
     $("status").textContent = "Dataset ready.";
   } catch (error) { $("status").textContent = error.message; }
 });
@@ -79,16 +84,20 @@ $("run").addEventListener("click", async () => {
   finally { $("run").disabled = false; }
 });
 $("offline").addEventListener("click", async () => {
-  try { setDataset(await parseResponse(await fetch("/api/datasets/noaa-offline"))); $("status").textContent = "Offline NOAA excerpt loaded."; }
+  try { setDataset(await parseResponse(await fetch("/api/datasets/noaa-offline")), "offline"); $("status").textContent = "Offline NOAA excerpt loaded."; }
   catch (error) { $("status").textContent = error.message; }
 });
 $("live").addEventListener("click", async () => {
   $("status").textContent = "Downloading NOAA station export.";
   try {
     setDataset(await parseResponse(await fetch("/api/noaa/import", {method: "POST", headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({station: "florida_keys", start: $("start").value, end: $("end").value})})));
+      body: JSON.stringify({station: "florida_keys", start: $("start").value, end: $("end").value})})), "live");
     $("status").textContent = "NOAA export loaded.";
   } catch (error) { $("status").textContent = error.message; }
 });
-fetch("/api/datasets/sample").then(parseResponse).then(setDataset)
+$("sample").addEventListener("click", async () => {
+  try { setDataset(await parseResponse(await fetch("/api/datasets/sample")), "sample"); $("status").textContent = "Sample dataset loaded."; }
+  catch (error) { $("status").textContent = error.message; }
+});
+fetch("/api/datasets/sample").then(parseResponse).then((info) => setDataset(info, "sample"))
   .catch((error) => { $("dataset-note").textContent = "Could not load sample data."; $("status").textContent = error.message; });

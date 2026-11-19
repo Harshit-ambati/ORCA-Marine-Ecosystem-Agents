@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#071e2a">
+  <meta name="theme-color" content="#102c3b">
   <title>ORCA · Marine ecosystem investigator</title>
   <link rel="stylesheet" href="/static/styles.css">
   <script defer src="/static/app.js"></script>
@@ -11,14 +11,15 @@
 <body>
   <header class="topbar"><div class="brand"><span class="brand-mark">◉</span> ORCA <span class="brand-divider">/</span> <span class="brand-sub">Marine intelligence</span></div><span class="badge">Research prototype · v0.1</span></header>
   <main>
-    <section class="hero"><p class="eyebrow">COLLABORATIVE AGENT INVESTIGATIONS</p><h1>Understand what the ocean <em>is telling us.</em></h1><p>Investigate reef heat stress with specialist agents that gather evidence, challenge conclusions, and explain what the data can support.</p></section>
+    <section class="hero"><div><p class="eyebrow">MARINE ECOSYSTEM REASONING</p><h1>See the story <em>beneath the surface.</em></h1><p>Bring reef measurements and observations together. ORCA's agents investigate the evidence, challenge weak conclusions, and show what the data supports.</p><a href="#workspace" class="hero-link">Start an investigation ↗</a></div><div class="hero-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="art-center"><span>◉</span><strong>Evidence first.</strong><small>Every conclusion has a trail.</small></div><small class="art-caption">OBSERVE · REASON · REVIEW</small></div></section>
+    <section class="workspace" id="workspace"><div class="workspace-head"><div><p class="eyebrow">THE WORKSPACE</p><h2>Investigate a reef</h2><p>Choose your evidence, frame a question, and follow the agents from first signal to reviewed finding.</p></div><span>01 / INVESTIGATION</span></div>
     <div class="layout">
       <section class="panel controls" aria-labelledby="setup-title">
         <div class="panel-heading"><span class="step">01</span><div><p class="eyebrow">SET UP A CASE</p><h2 id="setup-title">Investigation</h2></div></div>
         <div class="notice" id="dataset-note">Loading dataset…</div>
-        <label for="file">Dataset <span class="hint">Optional CSV upload</span></label>
-        <input id="file" type="file" accept=".csv,text/csv">
-        <p class="field-help">The provided sample is synthetic. Your uploaded CSV stays in server memory until restart.</p>
+        <div class="form-heading"><strong>Data source</strong><small>Start with a sample or bring your own</small></div>
+        <div class="source-grid" role="group" aria-label="Choose a data source"><button type="button" id="sample" class="source active" aria-pressed="true"><b>◇</b><strong>Sample</strong><small>Synthetic demo</small></button><button type="button" id="offline" class="source" aria-pressed="false"><b>◈</b><strong>NOAA case</strong><small>Offline excerpt</small></button><button type="button" id="live" class="source" aria-pressed="false"><b>↗</b><strong>Live NOAA</strong><small>Selected dates</small></button></div>
+        <label for="file" class="upload"><span class="upload-icon">↑</span><span><strong>Upload your own CSV</strong><small>UTF-8 · up to 2 MB · stored until server restart</small></span><span class="upload-cta">Browse</span></label><input id="file" class="visually-hidden" type="file" accept=".csv,text/csv">
         <label for="site">Reef site</label><select id="site"></select>
         <div class="dates"><div><label for="start">From</label><input id="start" type="date"></div><div><label for="end">To</label><input id="end" type="date"></div></div>
         <label for="question">Research question</label><textarea id="question" rows="3">What do the available records tell us about bleaching risk during this period?</textarea>
@@ -36,6 +37,8 @@
         </div>
       </section>
     </div>
+    </section>
+    <section class="workflow" id="workflow"><p class="eyebrow">A TRANSPARENT WORKFLOW</p><h2>Collaboration you can inspect.</h2><p>ORCA shows the path from measurement to conclusion, including objections and revisions.</p><div class="workflow-grid"><article><span>01 / DATA</span><h3>Gather signals</h3><p>Data and observation agents examine selected records and note missing evidence.</p></article><article><span>02 / REASON</span><h3>Form a hypothesis</h3><p>A reasoning agent proposes findings that can be traced to source rows.</p></article><article><span>03 / REVIEW</span><h3>Challenge claims</h3><p>A critic questions unsupported conclusions before a report is accepted.</p></article></div></section>
     <footer>ORCA is an educational research prototype. Heat stress indicates risk; confirmed bleaching requires direct observations.</footer>
   </main>
 </body>
